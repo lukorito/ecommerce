@@ -46,6 +46,7 @@ module.exports = class CustomerController {
       });
     }
     if (errors.length > 0) {
+      console.log('error')
       handler.sendErrors(res, 400, errors);
     } else {
       try {

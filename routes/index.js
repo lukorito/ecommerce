@@ -1,11 +1,12 @@
 const DepartmentController = require('../controllers/DepartmentController');
 const CustomerController = require('../controllers/CustomerController');
 const OrderController = require('../controllers/OrderController');
-const ShippingCartController = require('../controllers/ShippingCartController');
+const ShoppingCartController = require('../controllers/ShoppingCartController');
 const TaxController = require('../controllers/TaxController');
 const CategoriesController = require('../controllers/CategoriesController');
 const ShippingController = require('../controllers/ShippingController');
 const ProductsController = require('../controllers/ProductsController');
+const AttributesController = require('../controllers/AttributesController');
 
 module.exports = [
   // Departments
@@ -64,22 +65,78 @@ module.exports = [
     method: 'post',
     path: '/orders',
     Controller: OrderController,
-    action: 'create',
+    action: 'createOrder',
     authenticated: true,
   },
   // Shopping cart
   {
     method: 'get',
     path: '/shoppingcart/generateUniqueId',
-    Controller: ShippingCartController,
+    Controller: ShoppingCartController,
     action: 'generateUniqueId',
     authenticated: false,
   },
   {
-    method: 'get',
+    method: 'post',
     path: '/shoppingcart/add',
-    Controller: ShippingCartController,
+    Controller: ShoppingCartController,
     action: 'addProductToCart',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/shoppingcart/:cartId',
+    Controller: ShoppingCartController,
+    action: 'getProductsInCart',
+    authenticated: false,
+  },
+  {
+    method: 'put',
+    path: '/shoppingcart/update/:itemId',
+    Controller: ShoppingCartController,
+    action: 'updateCartQuantity',
+    authenticated: false,
+  },
+  {
+    method: 'delete',
+    path: '/shoppingcart/empty/:cartId',
+    Controller: ShoppingCartController,
+    action: 'emptyCart',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/shoppingcart/moveToCart/:itemId',
+    Controller: ShoppingCartController,
+    action: 'moveToCart',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/shoppingcart/totalAmount/:cartId',
+    Controller: ShoppingCartController,
+    action: 'totalAmount',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/shoppingcart/saveForLater/:itemId',
+    Controller: ShoppingCartController,
+    action: 'saveForLater',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/shoppingcart/getSaved/:cartId',
+    Controller: ShoppingCartController,
+    action: 'getSaved',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/shoppingcart/removeProduct/:itemId',
+    Controller: ShoppingCartController,
+    action: 'removeProduct',
     authenticated: false,
   },
   // Taxes
@@ -124,6 +181,35 @@ module.exports = [
     path: '/categories/inDepartment/:departmentId',
     Controller: CategoriesController,
     action: 'getDepartmentCategory',
+    authenticated: false,
+  },
+  // attributes
+  {
+    method: 'get',
+    path: '/attributes',
+    Controller: AttributesController,
+    action: 'getAll',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/attributes/:attributeId',
+    Controller: AttributesController,
+    action: 'getOne',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/attributes/values/:attributeId',
+    Controller: AttributesController,
+    action: 'getValueFromAttribute',
+    authenticated: false,
+  },
+  {
+    method: 'get',
+    path: '/attributes/inProduct/:productId',
+    Controller: AttributesController,
+    action: 'getAttributeForProduct',
     authenticated: false,
   },
   // Shipping Region

@@ -6,9 +6,10 @@ module.exports = class DepartmentRepository {
   /**
    * gets all departments
    */
-  async addNewOrder(cartId, customerId, shippingId, taxId) {
+  async createOrder(cartId, customerId, shippingId, taxId) {
+    console.log(cartId, customerId, shippingId, taxId)
     const row = await this.pool.query(
-      `CALL shopping_cart_create_order(${cartId}, ${customerId}, ${shippingId}, ${taxId})`,
+      `CALL shopping_cart_create_order('${cartId}', ${customerId}, ${shippingId}, ${taxId})`,
     );
     return row[0];
   }
