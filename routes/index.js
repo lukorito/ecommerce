@@ -7,6 +7,7 @@ const CategoriesController = require('../controllers/CategoriesController');
 const ShippingController = require('../controllers/ShippingController');
 const ProductsController = require('../controllers/ProductsController');
 const AttributesController = require('../controllers/AttributesController');
+const PaymentController = require('../controllers/PaymentController');
 
 module.exports = [
   // Departments
@@ -68,6 +69,28 @@ module.exports = [
     action: 'createOrder',
     authenticated: true,
   },
+  {
+    method: 'get',
+    path: '/orders/:orderId',
+    Controller: OrderController,
+    action: 'getOneOrder',
+    authenticated: true,
+  },
+  {
+    method: 'get',
+    path: '/orders/customer/inCustomer',
+    Controller: OrderController,
+    action: 'customerOrderById',
+    authenticated: true,
+  },
+  {
+    method: 'get',
+    path: '/orders/shortDetail/:orderId',
+    Controller: OrderController,
+    action: 'orderShortDetail',
+    authenticated: true,
+  },
+
   // Shopping cart
   {
     method: 'get',
@@ -290,5 +313,13 @@ module.exports = [
     Controller: ProductsController,
     action: 'createProductReview',
     authenticated: true,
+  },
+  // Stripe Payment
+  {
+    method: 'post',
+    path: '/stripe/charge',
+    Controller: PaymentController,
+    action: 'makeCharge',
+    authenticated: false,
   },
 ];

@@ -46,6 +46,7 @@ Routes.forEach((route) => {
         const results = await controller[route.action](req, res, next);
         if (results) return res;
       } catch (e) {
+        console.log(e)
         return new Error('Error');
       }
     },
