@@ -46,7 +46,7 @@ module.exports = class CustomerController {
       });
     }
     if (errors.length > 0) {
-      console.log('error')
+      console.log('error');
       handler.sendErrors(res, 400, errors);
     } else {
       try {
@@ -182,5 +182,14 @@ module.exports = class CustomerController {
     } else {
       handler.sendError(res, 'USR_08', 400, 'creditCard', 'this is an invalid Credit Card');
     }
+  }
+
+  async updateAddress(req, res, next) {
+    const { id } = req.user;
+    const {
+      firstAddress, secondAddress, city, region, postalCode, country, shippingRegionId,
+    } = req.body;
+    const user = await this.repo.updateAddress(id, firstAddress, secondAddress, city, region, postalCode, country, parseInt(shippingRegionId, 10));
+    handler.sendResponse(res, 200, { customer: user });
   }
 };

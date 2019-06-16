@@ -10,7 +10,7 @@ module.exports = class OrderController {
   async createOrder(req, res, next) {
     const { cartId, shippingId, taxId } = req.body;
     const { id: customerId } = req.user;
-    const order = await this.repo.createOrder(cartId, customerId, shippingId, taxId);
+    const order = await this.repo.createOrder(cartId, customerId, parseInt(shippingId, 10), parseInt(taxId, 10));
     return order
       ? handler.sendResponse(res, 200, order)
       : handler.sendError(res, 'USR_02', 500, 'order', 'Order not created');

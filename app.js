@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const Logger = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
+const cors = require('cors');
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 
@@ -13,7 +14,6 @@ require('dotenv').config();
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const Routes = require('./routes/index');
-const CustomerController = require('./controllers/CustomerController');
 
 
 const authMiddleware = require('./middleware/authMiddleware');
@@ -26,6 +26,7 @@ const port = process.env.PORT || 3001;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 // api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

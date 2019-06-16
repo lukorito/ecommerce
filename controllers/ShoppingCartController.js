@@ -14,8 +14,9 @@ module.exports = class OrderController {
 
   async addProductToCart(req, res, next) {
     const { cartId, productId, attributes } = req.body;
-    const product = await this.repo.addProductToCart(cartId, parseInt(productId, 10), attributes);
-    handler.sendResponse(res, 200, product);
+    await this.repo.addProductToCart(cartId, parseInt(productId, 10), attributes);
+    const products = await this.repo.getProductsInCart(cartId);
+    handler.sendResponse(res, 200, products);
   }
 
   async getProductsInCart(req, res, next) {

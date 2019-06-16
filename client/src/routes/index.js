@@ -1,22 +1,55 @@
-import {Route, Switch} from 'react-router';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import Home from '../views/Home';
+import {Route} from 'react-router-dom';
+import {ProtectedRoute} from './config/ProtectedRoutes';
+import Landing from '../views/Landing';
+import SignUp from '../views/SignUp';
+import Login from '../views/Login';
+import Customer from '../views/Customer';
+import Product from '../views/Product';
+import ShoppingCart from '../views/ShoppingCart';
+import Checkout from '../views/Checkout';
 
-const routes = {
-  '/': Home
-};
-
-const App = () => (
-  <BrowserRouter>
-    <Switch>
-      {
-        Object.keys(routes).map(route => (
-          <Route path={route} key={route} exact component={routes[route]} />
-        ))
-      }
-    </Switch>
-  </BrowserRouter>
-);
-
-export default App;
+export default [
+  {
+    type: Route,
+    path: ['/', '/products'],
+    component: Landing,
+    exact: true,
+  },
+  {
+    type: Route,
+    path: '/customers/register',
+    component: SignUp,
+    exact: false
+  },
+  {
+    type: Route,
+    path: '/customers/login',
+    component: Login,
+    exact: false
+  },
+  {
+    type: ProtectedRoute,
+    path: '/customer',
+    component: Customer,
+    exact: false
+  },
+  {
+    type: Route,
+    path: '/products/:id',
+    component: Product,
+    exact: true
+  },
+  {
+    type: Route,
+    path: '/shoppingCart',
+    component: ShoppingCart,
+    exact: true
+  },
+  {
+    type: ProtectedRoute,
+    path: '/checkout',
+    component: Checkout,
+    exact: true
+  }
+];

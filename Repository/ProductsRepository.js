@@ -9,10 +9,11 @@ module.exports = class ProductsRepository {
         IF(LENGTH(description) <= ${descriptionLength},
                          description,
                          CONCAT(LEFT(description, ${descriptionLength}),
-                                '...')) AS description
+                                '...')) AS description, price, discounted_price, thumbnail
         FROM product
         ORDER BY product_id
-        LIMIT ${page}, ${limit};`,
+        LIMIT ${page}, ${limit};
+        `,
     );
     return row;
   }
@@ -24,7 +25,7 @@ module.exports = class ProductsRepository {
         IF(LENGTH(description) <= ${descriptionLength},
                          description,
                          CONCAT(LEFT(description, ${descriptionLength}),
-                                '...')) AS description
+                                '...')) AS description, price, discounted_price, thumbnail
         FROM product
         WHERE MATCH (name, description) AGAINST ('${queryString}' IN BOOLEAN MODE)
         ORDER BY product_id
@@ -32,18 +33,6 @@ module.exports = class ProductsRepository {
       );
       return row;
     }
-    const [row] = await this.pool.query(
-      `SELECT product_id, name,
-        IF(LENGTH(description) <= ${descriptionLength},
-                         description,
-                         CONCAT(LEFT(description, ${descriptionLength}),
-                                '...')) AS description
-        FROM product
-        WHERE MATCH (name, description) AGAINST ('${queryString}')
-        ORDER BY product_id
-        LIMIT ${page}, ${limit};`,
-    );
-    return row;
   }
 
   async getOne(productId) {

@@ -56,6 +56,13 @@ module.exports = [
   },
   {
     method: 'put',
+    path: '/customers/address',
+    Controller: CustomerController,
+    action: 'updateAddress',
+    authenticated: true,
+  },
+  {
+    method: 'put',
     path: '/customers/creditCard',
     Controller: CustomerController,
     action: 'updateCreditCard',
@@ -156,7 +163,7 @@ module.exports = [
     authenticated: false,
   },
   {
-    method: 'get',
+    method: 'delete',
     path: '/shoppingcart/removeProduct/:itemId',
     Controller: ShoppingCartController,
     action: 'removeProduct',

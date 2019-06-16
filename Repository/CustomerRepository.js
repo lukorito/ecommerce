@@ -37,4 +37,11 @@ module.exports = class CustomerRepository {
     );
     return Boolean(row[0].affectedRows > 0);
   }
+
+  async updateAddress(customerId, address1, address2, city, region, postalCode, country, shippingRegion) {
+    const [row] = await this.pool.query(
+      `CALL customer_update_address(${customerId}, '${address1}', '${address2}', '${city}', '${region}', '${postalCode}', '${country}', ${shippingRegion})`,
+    );
+    return row;
+  }
 };

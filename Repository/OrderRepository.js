@@ -11,7 +11,7 @@ module.exports = class OrderRepository {
     const row = await this.pool.query(
       `CALL shopping_cart_create_order('${cartId}', ${customerId}, ${shippingId}, ${taxId})`,
     );
-    return row[0];
+    return row[0][0];
   }
 
   async getOneOrder(orderId) {

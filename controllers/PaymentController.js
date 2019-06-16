@@ -7,7 +7,19 @@ module.exports = class PaymentController {
   constructor() {
     this.stripe = stripe(STRIPE_SECRET_KEY);
   }
+
   async makeCharge(req, res, next) {
-  //  To be handled together with frontend
+    const {
+      stripeToken, orderId, description, amount,
+    } = req.body;
+    const total = parseInt(amount, 10)
+    const response = await this.stripe.charges.create({
+      source: stripeToken,
+      amount: total,
+      description,
+      currency: 'usd',
+      metadata: { orderId },
+    });
+    handler.sendResponse(res, 200, response);
   }
 };
