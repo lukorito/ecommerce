@@ -17,14 +17,14 @@ class Login extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {history} = this.props;
-    const {state} = history.location;
-    const {pathname} = state.from;
-    if(nextProps.success){
-      history.push(pathname);
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   const {history} = this.props;
+  //   const {state} = history.location;
+  //   const {pathname} = state.from;
+  //   if(nextProps.success){
+  //     history.push(pathname);
+  //   }
+  // }
 
   handleInputChange(event) {
     const {name, value} = event.target;
