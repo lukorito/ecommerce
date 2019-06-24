@@ -82,7 +82,7 @@ const initialStateCartTotal = {
   success: false,
   loading: false,
   error: false,
-  total: ''
+  total: '0.00'
 };
 
 export const getShoppingCartTotal = (state= initialStateCartTotal, action) => {
@@ -97,7 +97,7 @@ export const getShoppingCartTotal = (state= initialStateCartTotal, action) => {
       ...state,
       loading: false,
       success: true,
-      total: action.payload.data.total_amount
+      total: action.payload.data.total_amount === null ? '0.00' : action.payload.data.total_amount
     };
   case `${GET_SHOPPING_CART_TOTAL}_ERROR`:
     return {
@@ -151,7 +151,6 @@ export const getShoppingCartItems = (state= initialStateCartItems, action) => {
       ...state,
       loading: false,
       success: true,
-      items: action.payload.data
     };
   case `${GET_SHOPPING_CART_ITEMS}_ERROR`:
     return {

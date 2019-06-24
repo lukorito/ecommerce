@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './checkout.scss';
 import {CardElement, injectStripe} from 'react-stripe-elements';
 import { Form, Message } from 'semantic-ui-react';
@@ -41,13 +42,12 @@ class CheckoutForm extends React.Component {
     getShoppingCartTotal(getStoredCartId());
   }
 
-
   async handleSubmit(e){
     e.preventDefault();
     const {stripe, customer, order, makePayment, total} = this.props;
     const {description} = this.state;
     const {token} = await stripe.createToken({name: customer.name});
-    makePayment(token.id, order.orderId, description, total);
+    makePayment(token.id, order[0].orderId, description, total);
   }
 
   handleChange (e) {
@@ -78,11 +78,27 @@ class CheckoutForm extends React.Component {
     );
   }
 }
+
+CheckoutForm.propTypes = {
+  getCustomer: PropTypes.func.isRequired,
+  makePayment: PropTypes.func.isRequired,
+  customer: PropTypes.object,
+  order: PropTypes.object.isRequired,
+  paymentSuccess: PropTypes.bool.isRequired,
+  stripe: PropTypes.shape({
+    createToken: PropTypes.func
+  }).isRequired,
+  total: PropTypes.string.isRequired,
+};
+
+CheckoutForm.defaultProps = {
+  customer: {}
+};
+
 const mapStateToProps = (state) => {
   return {
     customer: state.customer.customer,
     order: state.order.order,
-    paymentSuccess: state.payment.success
   };
 };
 

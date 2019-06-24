@@ -1,23 +1,23 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { Image } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import {fetchProducts} from '../../redux/actions/productsActions';
 import Paginator from '../../components/Paginator';
 import Spinner from '../../components/Spinner';
 import './products.scss';
 import SideBar from '../../components/SideBar';
-import { Link } from 'react-router-dom';
 
 class Products extends React.Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.state = {
       products: [],
       page: 1
     };
   }
   componentDidMount() {
-    const { fetchProducts } = this.props;
+    const { fetchProducts,} = this.props;
     const {page} = this.state;
     fetchProducts(page);
   }
@@ -44,7 +44,7 @@ class Products extends React.Component {
     this.setState({
       page: activePage
     });
-  }
+  };
 
   render () {
     const {products} = this.state;
@@ -103,7 +103,8 @@ class Products extends React.Component {
 }
 const mapStateToProps = (state) => ({
   products: state.products.products,
-  loading: state.products.loading
+  loading: state.products.loading,
+  total: state.total.total
 });
 
 const mapDispatchToProps = (dispatch) => {

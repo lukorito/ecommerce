@@ -12,43 +12,17 @@
     .container {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       margin: 0 150px 0 150px;
 
-      img:nth-of-type(1) {
-        float: left;
-      }
-
-      .cart {
-        position: relative;
-        left: 65%;
-        height: 100%;
-
-        i {
-          margin-top: 5px;
-        }
-      }
-
-      .customer {
-        position: absolute;
-        right: 25rem;
-        top: 2rem;
-        justify-content: space-between;
-        font-size: larger;
-
-        .username {
-          font-weight: bold;
-          z-index: 1;
-
-          .item {
-            font-size: 15px;
-          }
-        }
-      }
-
       .nav-buttons {
-        position: absolute;
-        right: 25rem;
-        top: 2rem;
+        margin-top: 30px;
+        width: 30%;
+        display: flex;
+        justify-content: space-between;
+
+        .auth-buttons {
+        }
 
 
         a {

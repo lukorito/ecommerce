@@ -16,6 +16,7 @@ module.exports = class CustomerController {
     const email = req.body.email.trim().toLowerCase();
     const password = req.body.password.trim();
     const errors = [];
+    const { SECRET_KEY, JWT_EXPIRY } = process.env;
     if (!validator.isAlpha(name)) {
       errors.push({
         code: 'USR_02',
@@ -56,8 +57,13 @@ module.exports = class CustomerController {
         Object.keys(user).forEach((key) => {
           customerId = user[key];
         });
-        const newUser = await this.repo.getById(customerId);
-        handler.sendResponse(res, 201, { customer: newUser });
+        const token = jwt.sign({ id: customerId }, SECRET_KEY, { expiresIn: JWT_EXPIRY });
+        const data = {
+          id: customerId,
+          accessToken: token,
+          expiresIn: JWT_EXPIRY,
+        };
+        handler.sendResponse(res, 200, data);
       } catch (error) {
         throw error;
       }

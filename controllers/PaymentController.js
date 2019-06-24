@@ -12,7 +12,7 @@ module.exports = class PaymentController {
     const {
       stripeToken, orderId, description, amount,
     } = req.body;
-    const total = parseInt(amount, 10)
+    const total = parseInt(amount, 10) * 100;
     const response = await this.stripe.charges.create({
       source: stripeToken,
       amount: total,

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './shoppingcart.scss';
 import { connect } from 'react-redux';
 import {Table, Dropdown, Icon, Button} from 'semantic-ui-react';
@@ -6,11 +7,12 @@ import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
 import { getCustomer } from '../../redux/actions/customerActions';
 import {
-  deleteItemFromCart, emptyCart,
+  deleteItemFromCart, emptyCart, getShoppingCartId,
   getShoppingCartItems,
   getShoppingCartTotal, updateShoppingCart,
 } from '../../redux/actions/shoppingCartActions';
 import { getStoredCartId, removeStoredCartId } from '../../helpers/utils';
+import { resetSuccess } from '../../redux/actions/generalActions';
 
 class ShoppingCart extends React.Component {
   constructor(props) {
@@ -51,6 +53,7 @@ class ShoppingCart extends React.Component {
     const {updateShoppingCart} = this.props;
     return function (e, {value}) {
       updateShoppingCart(itemId, value);
+      window.location.reload();
     };
   }
 
@@ -73,7 +76,7 @@ class ShoppingCart extends React.Component {
 
   render() {
     const {items} = this.state;
-    const {customer} = this.props;
+    const {customer, total} = this.props;
     const selectOptions = [
       {value: 1, text: 1},
       {value: 2, text: 2},
@@ -83,7 +86,7 @@ class ShoppingCart extends React.Component {
     ];
     return(
       <div className="wrapper">
-        <NavBar showButtons customer={customer} />
+        <NavBar showButtons customer={customer} total={total}/>
 
         <div className="cart-container">
           <h1>
@@ -152,11 +155,30 @@ item(s) in the Cart
     );
   }
 }
+
+ShoppingCart.propTypes = {
+  getCustomer: PropTypes.func.isRequired,
+  getShoppingCartTotal: PropTypes.func.isRequired,
+  getShoppingCartItems: PropTypes.func.isRequired,
+  updateShoppingCart: PropTypes.func.isRequired,
+  deleteItemFromCart: PropTypes.func.isRequired,
+  emptyCart: PropTypes.func.isRequired,
+  customer: PropTypes.object,
+  total: PropTypes.string.isRequired,
+  items: PropTypes.array,
+  getShoppingCartId: PropTypes.func.isRequired
+};
+
+ShoppingCart.defaultProps = {
+  customer: {},
+  items: []
+};
+
 const mapStateToProps = (state) => {
   return {
     customer: state.customer.customer,
     total: state.total.total,
-    items: state.items.items
+    items: state.items.items,
   };
 };
 
@@ -167,7 +189,9 @@ const mapDispatchToProps = (dispatch) => {
     getShoppingCartItems: (cartId) => dispatch(getShoppingCartItems(cartId)),
     updateShoppingCart: (itemId, quantity) => dispatch(updateShoppingCart(itemId, quantity)),
     deleteItemFromCart: (itemId) => dispatch(deleteItemFromCart(itemId)),
-    emptyCart: (cartId) => dispatch(emptyCart(cartId))
+    emptyCart: (cartId) => dispatch(emptyCart(cartId)),
+    resetSuccess: () => dispatch(resetSuccess()),
+    getShoppingCartId: () => dispatch(getShoppingCartId())
   };
 };
 

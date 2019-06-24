@@ -27,5 +27,12 @@ export const ProtectedRoute = ({component: Component, ...rest}) => {
 ProtectedRoute.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
+
+ProtectedRoute.defaultProps = {
+  location: {
+    pathname: '/'
+  }
+}
+

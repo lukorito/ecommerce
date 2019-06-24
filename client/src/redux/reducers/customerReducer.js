@@ -27,7 +27,6 @@ export const getCustomer = (state = initialState, action) => {
       ...state,
       success: true,
       loading: false,
-      customer: action.payload.data.customer
     };
   case `${GET_CUSTOMER}_ERROR`:
     return {

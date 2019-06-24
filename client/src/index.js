@@ -4,7 +4,6 @@ import {Provider} from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom';
 import store from './redux/store';
 import App from './views/App';
-import {StripeProvider} from 'react-stripe-elements';
 
 const Root = () => (
     <Provider store={store}>

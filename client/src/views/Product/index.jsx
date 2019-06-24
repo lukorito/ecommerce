@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './product.scss';
 import { connect } from 'react-redux';
 import { Button, Image, Message } from 'semantic-ui-react';
@@ -15,29 +16,24 @@ import { resetSuccess } from '../../redux/actions/generalActions';
 
 
 class Product extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       size: '',
       color: ''
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleAddCart = this.handleAddCart.bind(this);
   }
+
   componentDidMount() {
-    const {match : {params : { id }}, fetchProduct, getProductAttributes, getCustomer, success, resetSuccess} = this.props;
+    const {match : {params : { id }}, fetchProduct, getProductAttributes, getCustomer, success, resetSuccess, getShoppingCartTotal} = this.props;
+    const cartId = getStoredCartId();
+    getShoppingCartTotal(cartId);
     fetchProduct(id);
     getProductAttributes(id);
     getCustomer();
     if(success) resetSuccess();
-  }
-
-  handleChange(e){
-    const {value, name} = e.target;
-    this.setState({
-      [name.toLowerCase()]: value
-    });
   }
 
   async getCartId () {
@@ -51,12 +47,19 @@ class Product extends React.Component {
     return cartId;
   }
 
+  handleChange(e){
+    const {value, name} = e.target;
+    this.setState({
+      [name.toLowerCase()]: value
+    });
+  }
+
   async handleAddCart (productId) {
     const {addProductToCart, getShoppingCartTotal} = this.props;
     const {size, color} = this.state;
     const cartId = await this.getCartId();
     const attributes = `${size}, ${color}`;
-    addProductToCart(cartId, productId, attributes);
+    await addProductToCart(cartId, productId, attributes);
     getShoppingCartTotal(cartId);
   }
 
@@ -160,6 +163,34 @@ class Product extends React.Component {
     );
   }
 }
+
+Product.propTypes = {
+  fetchProduct: PropTypes.func.isRequired,
+  getProductAttributes: PropTypes.func.isRequired,
+  getCustomer: PropTypes.func.isRequired,
+  getShoppingCartId: PropTypes.func.isRequired,
+  addProductToCart: PropTypes.func.isRequired,
+  getShoppingCartTotal: PropTypes.func.isRequired,
+  resetSuccess: PropTypes.func.isRequired,
+  product: PropTypes.object,
+  customer: PropTypes.object,
+  productAttributes: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  success: PropTypes.bool.isRequired,
+  total: PropTypes.string.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string
+    })
+  }).isRequired
+};
+
+Product.defaultProps = {
+  product: {},
+  customer: {},
+  productAttributes: {}
+};
+
 
 const mapStateToProps = (state) => {
   return {

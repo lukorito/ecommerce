@@ -1,4 +1,3 @@
-import React from 'react';
 import {Route} from 'react-router-dom';
 import {ProtectedRoute} from './config/ProtectedRoutes';
 import Landing from '../views/Landing';

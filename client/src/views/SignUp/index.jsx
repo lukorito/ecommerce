@@ -3,12 +3,15 @@ import './signup.scss';
 import { Button, Message, Form } from 'semantic-ui-react';
 import { Link }from 'react-router-dom';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import NavBar from '../../components/NavBar';
 import {signUp} from '../../redux/actions/authActions';
+import { getShoppingCartTotal } from '../../redux/actions/shoppingCartActions';
+import { getStoredCartId } from '../../helpers/utils';
 
 class SignUp extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       name: '',
       email: '',
@@ -16,6 +19,11 @@ class SignUp extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  componentDidMount() {
+    const { getShoppingCartTotal } = this.props;
+    const cartId = getStoredCartId();
+    getShoppingCartTotal(cartId);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,10 +49,10 @@ class SignUp extends React.Component {
 
   render() {
     const {name, email, password} = this.state;
-    const {loading, errors, error, success} = this.props;
+    const {loading, errors, error, success, total} = this.props;
     return (
       <div className="signup-container">
-        <NavBar showButtons={false} />
+        <NavBar showButtons={false} total={total}/>
         <div id="sign-up">
           <Form size="large" onSubmit={this.handleSubmit} loading={loading}>
             {error
@@ -89,17 +97,31 @@ class SignUp extends React.Component {
   }
 }
 
+SignUp.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  errors: PropTypes.array.isRequired,
+  error: PropTypes.bool.isRequired,
+  success: PropTypes.bool.isRequired,
+  signUp: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired,
+  getShoppingCartTotal: PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => {
   return ({
     loading: state.auth.loading,
     errors: state.auth.errors,
     success: state.auth.success,
-    error: state.auth.error
+    error: state.auth.error,
+    total: state.total.total,
   });
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    signUp: (name, email, password) => dispatch(signUp(name, email, password))
+    signUp: (name, email, password) => dispatch(signUp(name, email, password)),
+    getShoppingCartTotal: (cartId) => dispatch(getShoppingCartTotal(cartId))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

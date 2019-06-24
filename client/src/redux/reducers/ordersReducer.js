@@ -9,6 +9,11 @@ const initialState = {
 
 export const createOrder = (state = initialState, action) => {
   switch (action.type) {
+  case `${RESET_SUCCESS}`:
+    return {
+      ...state,
+      success: false
+    };
   case `${CREATE_ORDER}_LOADING`:
     return {
       ...state,

@@ -1,23 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Form, Divider, Header, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import NavBar from '../../components/NavBar';
 import { getCustomer } from '../../redux/actions/customerActions';
 import './customer.scss';
 import Spinner from '../../components/Spinner';
+import { getShoppingCartTotal } from '../../redux/actions/shoppingCartActions';
+import { getStoredCartId } from '../../helpers/utils';
 
 class Customer extends React.Component {
   componentDidMount() {
-    const {getCustomer} = this.props;
+    const {getCustomer, getShoppingCartTotal} = this.props;
     getCustomer();
+    const cartId = getStoredCartId();
+    getShoppingCartTotal(cartId);
   }
 
   render() {
-    const {customer, loading} = this.props;
+    const {customer, loading, total} = this.props;
     return(
       <div className="profile-container">
         <Spinner isLoading={loading} />
-        <NavBar showButtons={false} customer={customer} />
+        <NavBar showButtons={false} customer={customer} total={total} />
         <div id="profile">
           <Form size="large">
             <Form.Field>
@@ -67,16 +72,30 @@ class Customer extends React.Component {
   }
 }
 
+Customer.propTypes = {
+  customer: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  total: PropTypes.string.isRequired,
+  getCustomer: PropTypes.func.isRequired,
+  getShoppingCartTotal: PropTypes.func.isRequired
+};
+
+Customer.defaultProps = {
+  customer: {}
+};
+
 const mapStateToProps = (state) => {
   return {
     customer: state.customer.customer,
-    loading: state.customer.loading
+    loading: state.customer.loading,
+    total: state.total.total
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCustomer: () => dispatch(getCustomer())
+    getCustomer: () => dispatch(getCustomer()),
+    getShoppingCartTotal: (cartId) => dispatch(getShoppingCartTotal(cartId)),
   };
 };
 

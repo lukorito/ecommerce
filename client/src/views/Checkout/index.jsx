@@ -1,4 +1,5 @@
 import React from 'react';
+import PropType from 'prop-types';
 import './checkout.scss';
 import { Form, Input, Button, Dropdown, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
@@ -12,6 +13,7 @@ import { createOrder } from '../../redux/actions/orderActions';
 import { getShoppingCartTotal } from '../../redux/actions/shoppingCartActions';
 import { getStoredCartId } from '../../helpers/utils';
 import CheckoutForm from '../../components/CheckoutForm/CheckoutForm';
+import { resetSuccess } from '../../redux/actions/generalActions';
 
 class Checkout extends React.Component {
   constructor(props){
@@ -37,8 +39,21 @@ class Checkout extends React.Component {
     getShippingRegions();
     getShoppingCartTotal(getStoredCartId());
   }
+
   componentWillReceiveProps(nextProps) {
+    const {history} = this.props;
+    if(nextProps.paymentSuccess) {
+      setTimeout(() => history.push('/'), 2000);
+    }
   }
+
+  componentWillUnmount() {
+    const {resetSuccess, orderSuccess } = this.props;
+    if(orderSuccess) {
+      resetSuccess();
+    }
+  }
+
 
   handleInputChange = (e, data) => {
     const {name, value} = data;
@@ -146,7 +161,7 @@ class Checkout extends React.Component {
             <h1>Payment</h1>
             <StripeProvider apiKey="pk_test_Wnlj3KQoq9bQPFWrh6CO2KQz00avyqcsV4">
               <Elements>
-                <CheckoutForm total={total}/>
+                <CheckoutForm total={total} />
               </Elements>
             </StripeProvider>
           </div>
@@ -156,14 +171,37 @@ class Checkout extends React.Component {
   }
 }
 
+Checkout.propTypes = {
+  customer: PropType.object,
+  regions: PropType.array.isRequired,
+  taxes: PropType.array.isRequired,
+  total: PropType.string.isRequired,
+  orderSuccess: PropType.bool.isRequired,
+  getCustomer: PropType.func.isRequired,
+  getTaxDetails: PropType.func.isRequired,
+  getShippingRegions: PropType.func.isRequired,
+  updateCustomerAddress: PropType.func.isRequired,
+  createOrder: PropType.func.isRequired,
+  getShoppingCartTotal: PropType.func.isRequired,
+  resetSuccess: PropType.func.isRequired,
+  paymentSuccess: PropType.bool.isRequired,
+  history: PropType.shape({
+    push: PropType.func
+  }).isRequired
+};
+
+Checkout.defaultProps = {
+  customer: {}
+};
+
 const mapStateToProps = (state) => {
   return {
     customer: state.customer.customer,
     regions: state.addressDetails.regions,
     taxes: state.addressDetails.taxes,
     total: state.total.total,
-    orderSuccess: state.order.success
-
+    orderSuccess: state.order.success,
+    paymentSuccess: state.payment.success
   };
 };
 
@@ -175,6 +213,7 @@ const mapDispatchToProps = (dispatch) => {
     updateCustomerAddress: (firstAddress, secondAddress, city, region, postalCode, country, shippingRegionId) => dispatch(updateCustomerAddress(firstAddress, secondAddress, city, region, postalCode, country, shippingRegionId)),
     createOrder: (cartId, shippingId, taxId) => dispatch(createOrder(cartId, shippingId, taxId)),
     getShoppingCartTotal: (cartId) => dispatch(getShoppingCartTotal(cartId)),
+    resetSuccess: () => dispatch(resetSuccess())
   };
 };
 

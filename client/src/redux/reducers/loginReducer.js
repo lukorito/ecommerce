@@ -1,4 +1,4 @@
-import { LOGIN } from '../actions/types';
+import { LOGIN, CLEAR_ERRORS } from '../actions/types';
 
 const initialState = {
   success: false,
@@ -9,6 +9,12 @@ const initialState = {
 
 export const login = (state = initialState, action) => {
   switch (action.type) {
+  case `${CLEAR_ERRORS}`:
+    return {
+      ...state,
+      error: false,
+      errors: []
+    };
   case `${LOGIN}_LOADING`:
     return {
       ...state,
