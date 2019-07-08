@@ -2,10 +2,13 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import routes from '../routes/index';
 import '../style.scss';
+import NavBar from '../components/NavBar/index';
+import Footer from '../components/Footer';
 
 const Main = () => {
   return (
     <main className="main">
+      <NavBar />
       <Switch>
         {
           routes.map((route, index) => (
@@ -19,6 +22,7 @@ const Main = () => {
           ))
         }
       </Switch>
+      <Footer />
     </main>
   );
 };

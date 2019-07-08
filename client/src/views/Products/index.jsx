@@ -1,12 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Image } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import {fetchProducts} from '../../redux/actions/productsActions';
+import {
+  fetchProductDepartment,
+  fetchProducts,
+} from '../../redux/actions/productsActions';
 import Paginator from '../../components/Paginator';
 import Spinner from '../../components/Spinner';
 import './products.scss';
-import SideBar from '../../components/SideBar';
+import ProductsContainer from '../../components/ProductsContainer';
+import PropTypes from 'prop-types';
 
 class Products extends React.Component {
   constructor (props) {
@@ -17,9 +19,7 @@ class Products extends React.Component {
     };
   }
   componentDidMount() {
-    const { fetchProducts,} = this.props;
-    const {page} = this.state;
-    fetchProducts(page);
+    this.handleFetch();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,12 +32,24 @@ class Products extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { fetchProducts } = this.props;
+    const { match } = this.props;
     const {page} = this.state;
-    if(prevState.page !== page){
-      fetchProducts(page);
+    const {params: { departmentId }} = match;
+    if(prevProps.match.params.departmentId !== departmentId || prevState.page !== page) {
+      this.handleFetch();
     }
   }
+
+  handleFetch = () => {
+    const { fetchProducts, fetchProductDepartment, match } = this.props;
+    const {page} = this.state;
+    const {params: { departmentId }} = match;
+    if(departmentId !== undefined){
+      fetchProductDepartment(departmentId);
+    } else  {
+      fetchProducts(page);
+    }
+  };
 
   handlePageChange = (event, data) => {
     const {activePage} = data;
@@ -48,68 +60,56 @@ class Products extends React.Component {
 
   render () {
     const {products} = this.state;
-    const {loading} = this.props;
+    const {loading, count, match} = this.props;
+    const {params: { departmentId }} = match;
+    let totalpages;
+    if(count) {
+      totalpages = Math.ceil(count/10);
+    }
     return  (
-      <div className="wrapper">
+      <div className="products-wrapper">
         <Spinner isLoading={loading} />
         <div className="products-container">
-          <SideBar />
-          <div className="grid-container">
-            {
-              products.map((product) => {
-                return (
-                  <Link to={`/products/${product.product_id}`} key={product.product_id}>
-                    <div className="grid-item">
-                      <Image src={require(`../../assets/product_images/${product.thumbnail}`)} alt={product.thumbnail} />
-                      <div className="description">
-                        <h4>{product.name}</h4>
-                        <div>{product.description}</div>
-                        <div className="product-price">
-                          Price:
-                          {parseInt(product.discounted_price, 10)
-                            ? (
-                              <div>
-                                <span>
-                                  {' '}
-                                  {product.discounted_price}
-                                  {' '}
-                                </span>
-                                <span>{product.price}</span>
-                              </div>
-
-                            )
-                            : (
-                              <span>
-                                {' '}
-                                {product.price}
-                                {' '}
-                              </span>
-                            )}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })
-            }
+          <ProductsContainer products={products} />
+        </div>
+        {!departmentId && (
+          <div className="pagination">
+            <Paginator pageChange={this.handlePageChange} totalPages={totalpages} />
           </div>
-        </div>
-        <div className="pagination">
-          <Paginator pageChange={this.handlePageChange} />
-        </div>
+        )}
       </div>
     );
   }
 }
+
+Products.propTypes = {
+  fetchProducts: PropTypes.func.isRequired,
+  fetchProductDepartment: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      departmentId: PropTypes.string
+    })
+  }).isRequired,
+  products: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  count: PropTypes.string
+};
+
+Products.defaultProps = {
+  count: ''
+};
+
 const mapStateToProps = (state) => ({
   products: state.products.products,
   loading: state.products.loading,
-  total: state.total.total
+  total: state.total.total,
+  count: state.products.count
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchProducts: (page) => dispatch(fetchProducts(page))
+    fetchProducts: (page) => dispatch(fetchProducts(page)),
+    fetchProductDepartment: (departmentId) => dispatch(fetchProductDepartment(departmentId))
   };
 };
 

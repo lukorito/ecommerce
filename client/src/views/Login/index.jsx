@@ -20,6 +20,12 @@ class Login extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  componentWillMount() {
+    const {errors, clearErrors} = this.props;
+    if(errors.length > 0 ){
+      clearErrors();
+    }
+  }
 
   componentDidMount() {
     const { getShoppingCartTotal } = this.props;
@@ -27,12 +33,7 @@ class Login extends React.Component {
     getShoppingCartTotal(cartId);
   }
 
-  componentWillMount() {
-    const {errors, clearErrors} = this.props;
-    if(errors.length > 0 ){
-      clearErrors();
-    }
-  }
+
 
   componentWillReceiveProps(nextProps) {
     const {history} = this.props;

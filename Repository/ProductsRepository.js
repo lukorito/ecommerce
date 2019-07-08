@@ -11,11 +11,18 @@ module.exports = class ProductsRepository {
                          CONCAT(LEFT(description, ${descriptionLength}),
                                 '...')) AS description, price, discounted_price, thumbnail
         FROM product
-        ORDER BY product_id
+        GROUP BY  product_id
         LIMIT ${page}, ${limit};
         `,
     );
     return row;
+  }
+
+  async countProduct() {
+    const [row] = await this.pool.query(
+      'SELECT COUNT(*) FROM product',
+    );
+    return row[0];
   }
 
   async search(queryString, allWords, descriptionLength, limit, page) {
@@ -29,10 +36,23 @@ module.exports = class ProductsRepository {
         FROM product
         WHERE MATCH (name, description) AGAINST ('${queryString}' IN BOOLEAN MODE)
         ORDER BY product_id
-        LIMIT ${page}, ${limit};`,
+        LIMIT ${page}, ${limit};             
+        `,
       );
       return row;
     }
+    const [row] = await this.pool.query(
+      `SELECT product_id, name,
+        IF(LENGTH(description) <= ${descriptionLength},
+                         description,
+                         CONCAT(LEFT(description, ${descriptionLength}),
+                                '...')) AS description, price, discounted_price, thumbnail
+        FROM product
+        WHERE MATCH (name, description) AGAINST ('${queryString}')
+        ORDER BY product_id
+        LIMIT ${page}, ${limit};`,
+    );
+    return row;
   }
 
   async getOne(productId) {

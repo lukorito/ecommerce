@@ -1,78 +1,82 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import './navbar.scss';
-import { Dropdown } from 'semantic-ui-react';
-import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import logo from '../../assets/images/logo.png';
-import { removeToken } from '../../helpers/authUser';
-import Cart from '../Cart';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Header from '../Header/index';
+import { getShoppingCartItems } from '../../redux/actions/shoppingCartActions';
+import { getStoredCartId } from '../../helpers/utils';
+import { searchProduct } from '../../redux/actions/productsActions';
 
+class NavBar extends React.Component {
+  componentDidMount() {
+    const {getShoppingCartItems} = this.props;
+    const cartId = getStoredCartId();
+    getShoppingCartItems(cartId);
+  }
 
-const NavBar = (props) => {
-  const {history, showButtons, customer, total = '0.00'} = props;
-  return (
-    <div className="header">
-      <nav className="nav">
-        <div className="container">
-          <Link to="/" id="logo">
-            <img src={logo} alt="logo" />
-          </Link>
-          <div className="nav-buttons">
-            {!showButtons || Boolean(!customer.hasOwnProperty('name')) &&
-            (
-              <div className="auth-buttons">
-                <Link to="/customers/login">
-                Login
-                </Link>
-                <Link to="/customers/register">
-                Register
-                </Link>
-              </div>
-            )}
-            {Boolean(customer.hasOwnProperty('name')) && (
-              <div className="customer">
-              Hi
-                <span className="username">
-                  {' '}
-                  <Dropdown text={customer.name}>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        text="Profile"
-                        onClick={() => (
-                          history.push('/customer')
-                        )} />
-                      <Dropdown.Item
-                        text="Logout"
-                        onClick={() => {
-                          removeToken();
-                          window.location.reload();
-                        }}
-                      />
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </span>
-              </div>
-            )}
-            <Cart total={total} />
-          </div>
-        </div>
+  render() {
+    const {customer, items, searchProduct, results, searchLoading} = this.props;
+    return(
+      <nav>
+        <Header
+          customer={customer}
+          items={items}
+          handleSearch={searchProduct}
+          searchResults={results}
+          searchLoading={searchLoading}
+        />
+        <ul className="subnav">
+          <li className="department-subnav">
+            <Link to="/products">
+              <span>All Products</span>
+            </Link>
+          </li>
+          <li className="department-subnav">
+            <Link to="/products/inDepartment/1">
+              <span>Regional</span>
+            </Link>
+          </li>
+          <li className="department-subnav">
+            <Link to="/products/inDepartment/2">
+              <span>Nature</span>
+            </Link>
+          </li>
+          <li className="department-subnav">
+            <Link to="/products/inDepartment/3">
+              <span>Seasonal</span>
+            </Link>
+          </li>
+        </ul>
       </nav>
-    </div>
-  );
-};
+    );
+  }
+}
 
 NavBar.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func
-  }).isRequired,
-  showButtons: PropTypes.bool.isRequired,
-  customer: PropTypes.object,
-  total: PropTypes.string.isRequired
+  customer: PropTypes.object.isRequired,
+  items: PropTypes.array.isRequired,
+  getShoppingCartItems: PropTypes.func.isRequired,
+  searchProduct: PropTypes.func.isRequired,
+  results: PropTypes.array.isRequired,
+  searchLoading: PropTypes.bool.isRequired
 };
 
-NavBar.defaultProps = {
-  customer: {}
+const mapStateToProps = (state) => {
+  return {
+    customer: state.customer.customer,
+    items: state.items.items,
+    results: state.search.results,
+    searchLoading: state.search.loading,
+  };
 };
 
-export default withRouter(NavBar);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getShoppingCartItems: (cartId) => dispatch(getShoppingCartItems(cartId)),
+    searchProduct: (query) => dispatch(searchProduct(query))
+  };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

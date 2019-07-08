@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import './product.scss';
 import { connect } from 'react-redux';
 import { Button, Image, Message } from 'semantic-ui-react';
-import NavBar from '../../components/NavBar';
 import { fetchProduct } from '../../redux/actions/productsActions';
 import { getProductAttributes } from '../../redux/actions/attributesActions';
 import { getCustomer } from '../../redux/actions/customerActions';
 import {
   addProductToCart,
-  getShoppingCartId, getShoppingCartTotal,
+  getShoppingCartId, getShoppingCartItems, getShoppingCartTotal,
 } from '../../redux/actions/shoppingCartActions';
 import { getStoredCartId } from '../../helpers/utils';
 import { resetSuccess } from '../../redux/actions/generalActions';
+import ImageSlider from '../../components/Carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 
 class Product extends React.Component {
@@ -55,31 +56,37 @@ class Product extends React.Component {
   }
 
   async handleAddCart (productId) {
-    const {addProductToCart, getShoppingCartTotal} = this.props;
+    const {addProductToCart, getShoppingCartTotal, getShoppingCartItems} = this.props;
     const {size, color} = this.state;
     const cartId = await this.getCartId();
     const attributes = `${size}, ${color}`;
     await addProductToCart(cartId, productId, attributes);
     getShoppingCartTotal(cartId);
+    getShoppingCartItems(cartId);
   }
 
+  // TODO
+  // finish designing product colors and size picker
+  // continue refactor
+
   render() {
-    const {customer, productAttributes, product={}, loading, success, total} = this.props;
+    const { productAttributes, product={}, loading, success} = this.props;
     return(
       <div className="wrapper">
-        <NavBar showButtons customer={customer} total={total} />
         {product.hasOwnProperty('name') && (
           <div className="product-container">
             <div className="product-image">
-              <Image src={require(`../../assets/product_images/${product.image}`)} alt="" />
-              <div className="thumbnail">
-                <Image src={require(`../../assets/product_images/${product.image}`)} alt="" />
-                <Image src={require(`../../assets/product_images/${product.image_2}`)} alt="" />
-              </div>
+              <ImageSlider product={product} />
             </div>
             <div className="product-description">
               <h1>{product.name}</h1>
               <div className="product-price">
+                <div>
+                  <div className="color" onClick={event => console.log(event.target.dataset)}>
+                    <div className="green" data-color="green" style={{'border': '2px solid green', 'width': '200px'}}></div>
+                    <div data-color="red" style={{'border': '2px solid red'}}></div>
+                  </div>
+                </div>
                 <span>&#36;</span>
                 {parseInt(product.discounted_price, 10)
                   ? (
@@ -211,7 +218,8 @@ const mapDispatchToProps = (dispatch) => {
     getShoppingCartId: () => dispatch(getShoppingCartId()),
     addProductToCart: (cartId, productId, attributes) => dispatch(addProductToCart(cartId, productId, attributes)),
     getShoppingCartTotal: (cartId) => dispatch(getShoppingCartTotal(cartId)),
-    resetSuccess: () => dispatch(resetSuccess())
+    resetSuccess: () => dispatch(resetSuccess()),
+    getShoppingCartItems: (cartId) => dispatch(getShoppingCartItems(cartId))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

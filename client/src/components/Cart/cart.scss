@@ -1,9 +1,22 @@
-.cart {
+.shopping-cart {
   margin-right: 10em;
 
   #cart-link {
-    background: teal;
-    color: #fff;
+    color: #000;
+  }
 
+  .quantity {
+    position: relative;
+    border-radius: 9px;
+    width: 18px;
+    height: 18px;
+    display: block;
+    right: -20px;
+    top: -30px;
+    background: #f39;
+    color: white;
+    font-size: 10px;
+    text-align: center;
+    line-height: 18px;
   }
 }

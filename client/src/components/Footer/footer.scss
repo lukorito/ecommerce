@@ -1,0 +1,22 @@
+.footer {
+  background: rgba(229,229,229,0.9);
+  clear: both;
+  //margin: 40px 0 0;
+  padding: 2% 0;
+  text-align: left;
+  width: 100%;
+
+  .footer-container{
+    height: 100%;
+    margin: 0 auto;
+    max-width: 1258px;
+    position: relative;
+    width: 95%;
+
+    span{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

@@ -4,7 +4,6 @@ import './shoppingcart.scss';
 import { connect } from 'react-redux';
 import {Table, Dropdown, Icon, Button} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import NavBar from '../../components/NavBar';
 import { getCustomer } from '../../redux/actions/customerActions';
 import {
   deleteItemFromCart, emptyCart, getShoppingCartId,
@@ -86,7 +85,6 @@ class ShoppingCart extends React.Component {
     ];
     return(
       <div className="wrapper">
-        <NavBar showButtons customer={customer} total={total}/>
 
         <div className="cart-container">
           <h1>

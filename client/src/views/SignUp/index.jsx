@@ -8,6 +8,7 @@ import NavBar from '../../components/NavBar';
 import {signUp} from '../../redux/actions/authActions';
 import { getShoppingCartTotal } from '../../redux/actions/shoppingCartActions';
 import { getStoredCartId } from '../../helpers/utils';
+import { clearErrors } from '../../redux/actions/generalActions';
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -20,6 +21,15 @@ class SignUp extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  componentWillMount() {
+    const {errors, clearErrors} = this.props;
+    if(errors.length > 0 ){
+      clearErrors();
+    }
+  }
+
+
   componentDidMount() {
     const { getShoppingCartTotal } = this.props;
     const cartId = getStoredCartId();
@@ -29,7 +39,7 @@ class SignUp extends React.Component {
   componentWillReceiveProps(nextProps) {
     const {history} = this.props;
     if(nextProps.success){
-      history.push('/customers/login');
+      history.push('/');
     }
   }
 
@@ -39,6 +49,7 @@ class SignUp extends React.Component {
       [name]: value
     });
   }
+
 
   handleSubmit(event) {
     event.preventDefault();
@@ -52,7 +63,7 @@ class SignUp extends React.Component {
     const {loading, errors, error, success, total} = this.props;
     return (
       <div className="signup-container">
-        <NavBar showButtons={false} total={total}/>
+        <NavBar showButtons={false} total={total} />
         <div id="sign-up">
           <Form size="large" onSubmit={this.handleSubmit} loading={loading}>
             {error
@@ -106,7 +117,8 @@ SignUp.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired
   }).isRequired,
-  getShoppingCartTotal: PropTypes.func.isRequired
+  getShoppingCartTotal: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -121,7 +133,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     signUp: (name, email, password) => dispatch(signUp(name, email, password)),
-    getShoppingCartTotal: (cartId) => dispatch(getShoppingCartTotal(cartId))
+    getShoppingCartTotal: (cartId) => dispatch(getShoppingCartTotal(cartId)),
+    clearErrors: () => dispatch(clearErrors())
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

@@ -85,7 +85,6 @@ class Checkout extends React.Component {
     }));
     return(
       <div className="wrapper">
-        <NavBar showButtons={false} customer={customer} total={total} />
         <div className="checkout-container">
           <div className="customer-info">
             <h2>Shipping Information</h2>

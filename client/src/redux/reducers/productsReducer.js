@@ -1,10 +1,11 @@
-import {FETCH_PRODUCTS, FETCH_PRODUCT} from '../actions/types';
+import {FETCH_PRODUCTS, FETCH_PRODUCT, SEARCH_PRODUCT} from '../actions/types';
 
 const initialState = {
   success: false,
   loading: false,
   error: null,
-  products: []
+  products: [],
+  count: null
 };
 
 export const fetchProducts = (state = initialState, action) => {
@@ -19,7 +20,8 @@ export const fetchProducts = (state = initialState, action) => {
       ...state,
       loading: false,
       success: true,
-      products: action.payload.data
+      products: action.payload.data.products,
+      count: action.payload.data.count
     };
   case `${FETCH_PRODUCTS}_ERROR`:
     return {
@@ -63,3 +65,38 @@ export const fetchProduct = (state = initialStateProduct, action) => {
 
   }
 };
+
+const initialStateSearch = {
+  success: false,
+  loading: false,
+  error: null,
+  results: []
+};
+
+export const searchProduct = (state = initialStateSearch, action) => {
+  switch (action.type) {
+  case `${SEARCH_PRODUCT}_LOADING`:
+    return {
+      ...state,
+      loading: true,
+    };
+  case `${SEARCH_PRODUCT}_SUCCESS`:
+    return {
+      ...state,
+      loading: false,
+      success: true,
+      results: action.payload.data
+    };
+  case `${SEARCH_PRODUCT}_ERROR`:
+    return {
+      ...state,
+      success: false,
+      loading: false,
+      error: action.payload.data
+    };
+  default:
+    return state;
+
+  }
+};
+

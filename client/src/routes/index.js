@@ -7,11 +7,12 @@ import Customer from '../views/Customer';
 import Product from '../views/Product';
 import ShoppingCart from '../views/ShoppingCart';
 import Checkout from '../views/Checkout';
+import Products from '../views/Products';
 
 export default [
   {
     type: Route,
-    path: ['/', '/products'],
+    path: ['/'],
     component: Landing,
     exact: true,
   },
@@ -49,6 +50,12 @@ export default [
     type: ProtectedRoute,
     path: '/checkout',
     component: Checkout,
+    exact: true
+  },
+  {
+    type: Route,
+    path: ['/products', '/products/inDepartment/:departmentId'],
+    component: Products,
     exact: true
   }
 ];

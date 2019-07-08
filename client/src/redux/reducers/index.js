@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {fetchProducts, fetchProduct} from './productsReducer';
+import { fetchProducts, fetchProduct, searchProduct } from './productsReducer';
 import {signUp} from './signupReducer';
 import {login} from './loginReducer';
 import {getCustomer, getCustomerOptions} from './customerReducer';
@@ -21,8 +21,8 @@ const rootReducer = combineReducers({
   items: getShoppingCartItems,
   addressDetails: getCustomerOptions,
   order: createOrder,
-  payment: makePayment
-
+  payment: makePayment,
+  search: searchProduct
 });
 
 export default rootReducer;

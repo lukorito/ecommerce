@@ -11,12 +11,15 @@ module.exports = class ProductsController {
     const { descriptionLength = 200, limit = 10, page = 1 } = req.query;
     const startingPage = (page - 1) * limit;
     const products = await this.repo.getAll(descriptionLength, limit, startingPage);
-    handler.sendResponse(res, 200, products);
+    const counts = await this.repo.countProduct();
+    const count = counts[Object.keys(counts)[0]];
+    const response = { count, products };
+    handler.sendResponse(res, 200, response);
   }
 
   async search(req, res, next) {
     const {
-      query, allWords = 'on', descriptionLength = 200, limit = 20, page = 1,
+      query, allWords = 'on', descriptionLength = 200, limit = 10, page = 1,
     } = req.query;
     const startingPage = (page - 1) * limit;
     const search = await this.repo.search(query, allWords, descriptionLength, limit, startingPage);
@@ -59,7 +62,7 @@ module.exports = class ProductsController {
     const startingPage = (page - 1) * limit;
     const products = await this.repo.getAllByDepartment(departmentId, descriptionLength, limit, startingPage);
     return products.length
-      ? handler.sendResponse(res, 200, products)
+      ? handler.sendResponse(res, 200, { products })
       : handler.sendError(
         res,
         'USR_02',

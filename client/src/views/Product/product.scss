@@ -1,10 +1,10 @@
 .wrapper {
-  background: #eee;
   height: 100%;
 
   .product-container {
-    height: 65%;
-    width: 75%;
+    background: #fff;
+    width: 95%;
+    max-width: 1258px;
     margin: 30px auto auto;
     display: flex;
     flex-direction: row;
@@ -16,23 +16,9 @@
 
     .product-image {
       width: 50%;
+
       img {
-        margin: 5rem auto auto;
-      }
-
-      .thumbnail {
-        display: flex;
-        flex-direction: row;
-        margin: 50px;
-        justify-content: center;
-        align-items: center;
-
-         img {
-           margin: 0;
-           width: 100px;
-           object-fit: fill;
-
-         }
+        width: 100%;
       }
     }
 
@@ -48,6 +34,13 @@
         margin-top: 2em;
         color: #B22D10;
         font-size: 16px;
+
+        .color{
+
+          .green:active {
+            color: #0099ff;
+          }
+        }
 
         div {
           display: inline;
