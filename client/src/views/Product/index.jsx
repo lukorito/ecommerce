@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './product.scss';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Button, Image, Message } from 'semantic-ui-react';
 import { fetchProduct } from '../../redux/actions/productsActions';
 import { getProductAttributes } from '../../redux/actions/attributesActions';
@@ -14,7 +15,7 @@ import { getStoredCartId } from '../../helpers/utils';
 import { resetSuccess } from '../../redux/actions/generalActions';
 import ImageSlider from '../../components/Carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-
+import RadioComponent from '../../components/RadioComponent';
 
 class Product extends React.Component {
   constructor(props) {
@@ -28,11 +29,10 @@ class Product extends React.Component {
   }
 
   componentDidMount() {
-    const {match : {params : { id }}, fetchProduct, getProductAttributes, getCustomer, success, resetSuccess, getShoppingCartTotal} = this.props;
+    const {match : {params : { id }}, fetchProduct, getCustomer, success, resetSuccess, getShoppingCartTotal} = this.props;
     const cartId = getStoredCartId();
     getShoppingCartTotal(cartId);
     fetchProduct(id);
-    getProductAttributes(id);
     getCustomer();
     if(success) resetSuccess();
   }
@@ -70,7 +70,10 @@ class Product extends React.Component {
   // continue refactor
 
   render() {
-    const { productAttributes, product={}, loading, success} = this.props;
+    const { product={}, loading, success} = this.props;
+    const { size, color } = this.state;
+    const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
+    const colorOptions = ['White', 'Black', 'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Purple'];
     return(
       <div className="wrapper">
         {product.hasOwnProperty('name') && (
@@ -81,12 +84,6 @@ class Product extends React.Component {
             <div className="product-description">
               <h1>{product.name}</h1>
               <div className="product-price">
-                <div>
-                  <div className="color" onClick={event => console.log(event.target.dataset)}>
-                    <div className="green" data-color="green" style={{'border': '2px solid green', 'width': '200px'}}></div>
-                    <div data-color="red" style={{'border': '2px solid red'}}></div>
-                  </div>
-                </div>
                 <span>&#36;</span>
                 {parseInt(product.discounted_price, 10)
                   ? (
@@ -111,56 +108,21 @@ class Product extends React.Component {
                 {product.description}
               </div>
               <div className="attributes">
-                <div>Color</div>
                 <div className="color">
-                  {
-                    productAttributes.length > 0 &&
-                    productAttributes.map((attribute) => {
-                      return attribute.attribute_name === 'Color'
-                        ? (
-                          <span key={attribute.attribute_value_id}>
-                            <input type="radio" value={attribute.attribute_value} name={attribute.attribute_name} onChange={this.handleChange} />
-                            <span>
-                              {' '}
-                              {attribute.attribute_value}
-                              {' '}
-                            </span>
-                          </span>
-                        )
-                        :
-                        null;
-                    })
-                  }
+                  <span>Color</span>
+                  <RadioComponent onChange={this.handleChange} name="color" selected={color} options={colorOptions} />
                 </div>
-                <div>Size</div>
+
                 <div className="size">
-                  {/*TODO
-                  - Refactor
-                  */}
-                  {
-                    productAttributes.length > 0 &&
-                    productAttributes.map((attribute) => {
-                      return attribute.attribute_name === 'Size'
-                        ? (
-                          <span key={attribute.attribute_value_id}>
-                            <input type="radio" value={attribute.attribute_value} name={attribute.attribute_name} onChange={this.handleChange} />
-                            <span>
-                              {' '}
-                              {attribute.attribute_value}
-                              {' '}
-                            </span>
-                          </span>
-                        )
-                        :
-                        null;
-                    })
-                  }
+                  <span>Size</span>
+                  <RadioComponent onChange={this.handleChange} name="size" selected={size} options={sizeOptions} />
                 </div>
               </div>
-              <Button color="teal" loading={loading} onClick={() => this.handleAddCart(product.product_id)}> Add to Cart</Button>
+              <Button color="teal" loading={loading} onClick={() => this.handleAddCart(product.product_id)} disabled={!(Boolean(size) && Boolean(color))}> Add to Cart</Button>
               {success && (
                 <Message positive>
-                  <p>Added to Cart Successfully</p>
+                  <span>Added to Cart Successfully </span>
+                  <Link to="/shoppingCart">Go to Cart</Link>
                 </Message>
               )}
             </div>
@@ -173,7 +135,6 @@ class Product extends React.Component {
 
 Product.propTypes = {
   fetchProduct: PropTypes.func.isRequired,
-  getProductAttributes: PropTypes.func.isRequired,
   getCustomer: PropTypes.func.isRequired,
   getShoppingCartId: PropTypes.func.isRequired,
   addProductToCart: PropTypes.func.isRequired,
@@ -181,7 +142,6 @@ Product.propTypes = {
   resetSuccess: PropTypes.func.isRequired,
   product: PropTypes.object,
   customer: PropTypes.object,
-  productAttributes: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   success: PropTypes.bool.isRequired,
   total: PropTypes.string.isRequired,
@@ -195,7 +155,6 @@ Product.propTypes = {
 Product.defaultProps = {
   product: {},
   customer: {},
-  productAttributes: {}
 };
 
 
@@ -203,7 +162,6 @@ const mapStateToProps = (state) => {
   return {
     product: state.product.product,
     customer: state.customer.customer,
-    productAttributes: state.productAttributes.attributes,
     loading: state.shoppingCart.loading,
     success: state.shoppingCart.success,
     total: state.total.total
@@ -213,7 +171,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchProduct: (productId) => dispatch(fetchProduct(productId)),
-    getProductAttributes: (productId) => dispatch(getProductAttributes(productId)),
     getCustomer: () => dispatch(getCustomer()),
     getShoppingCartId: () => dispatch(getShoppingCartId()),
     addProductToCart: (cartId, productId, attributes) => dispatch(addProductToCart(cartId, productId, attributes)),

@@ -63,7 +63,6 @@ class SignUp extends React.Component {
     const {loading, errors, error, success, total} = this.props;
     return (
       <div className="signup-container">
-        <NavBar showButtons={false} total={total} />
         <div id="sign-up">
           <Form size="large" onSubmit={this.handleSubmit} loading={loading}>
             {error

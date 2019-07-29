@@ -67,7 +67,6 @@ class Login extends React.Component {
     const {loading, errors, error, success, total} = this.props;
     return (
       <div className="login-container">
-        <NavBar showButtons={false} total={total} />
         <div id="login">
           <Form size="large" onSubmit={this.handleSubmit} loading={loading}>
             {error

@@ -25,45 +25,59 @@
     .product-description {
       width: 50%;
       height: 100%;
+
       h1 {
-        margin: 50px auto auto;
+        margin: 10% auto auto 10%;
+        padding: 5%;
+        font-size: 40px;
       }
 
       .product-price {
         font-weight: bold;
-        margin-top: 2em;
+        margin-top: 1em;
         color: #B22D10;
-        font-size: 16px;
+        font-size: 30px;
 
-        .color{
-
-          .green:active {
-            color: #0099ff;
-          }
-        }
 
         div {
           display: inline;
 
           span:nth-of-type(2) {
             text-decoration: line-through;
-            font-size: 12px;
+            font-size: 20px;
           }
         }
       }
       .description{
-        margin: 50px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 18px;
+        padding: 5px 10px 5px 5px;
       }
 
       .attributes {
+        & > .color {
+          span:nth-child(1) {
+            display: block;
+            margin: 3px;
+            font-weight: bold;
+          }
+        }
 
-        .color-Red{
-          border: 3px solid red;
-          border-radius: 50%;
-          margin: 5px;
-          width: 5em;
+        & > .size {
+          span:nth-child(1) {
+            display: block;
+            margin: 3px;
+            font-weight: bold;
+          }
         }
       }
+
+      & > .positive {
+        margin-top: 10px;
+        width: 50%;
+      }
+
     }
   }
 }
