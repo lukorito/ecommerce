@@ -1,0 +1,21 @@
+.products-wrapper {
+  text-align: center;
+  background: #fff;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+
+  .products-container {
+    max-width: 1258px;
+    width: 95%;
+    margin: 0 auto;
+    text-align: left;
+    position: relative;
+  }
+
+  .pagination{
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
+}
+

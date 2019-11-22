@@ -1,0 +1,13 @@
+{
+    "parser": "babel-eslint",
+    "extends": "airbnb",
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        "no-underscore-dangle": [2, { "allowAfterThis": true }],
+        "no-console": "off",
+        "max-len": [2, 200, 4, {"ignoreUrls": true}]
+    }
+}

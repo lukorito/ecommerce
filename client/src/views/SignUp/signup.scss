@@ -1,0 +1,21 @@
+.signup-container{
+  height: 100%;
+
+  #sign-up {
+    display: flex;
+    background: #eee;
+    height: 100%;
+
+    form {
+      margin: 15em auto;
+      width: 20em;
+      height: auto;
+
+      button {
+        background: teal;
+        color: #fff;
+      }
+    }
+  }
+}
+

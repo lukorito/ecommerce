@@ -1,0 +1,18 @@
+.slider-container{
+  margin: 10%;
+  padding: 5%;
+  max-width: 100%;
+
+  .slide {
+    div {
+      img {
+        height: 400px;
+      }
+    }
+  }
+  .thumb {
+    img {
+      height: 70px;
+    }
+  }
+}

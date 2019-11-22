@@ -1,0 +1,44 @@
+.radio-button-container {
+    display: inline-block;
+
+    label {
+        span {
+            cursor: pointer;
+            box-sizing: border-box;
+            display: block;
+            float: left;
+            color: teal;
+            border: 1px solid teal;
+            border-radius: 3px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            margin: 0 5px 5px 0;
+            padding: 9px 0 7px 0;
+            text-align: center;
+            min-width: 40px;
+            line-height: 1.5;
+            font-size: 80%;
+            opacity: 0.5;
+
+            &:hover {
+                background: teal;
+                color: #fff;
+                opacity: 1;
+            }
+        }
+
+
+
+        input {
+            display: none;
+        }
+
+        input:checked ~ span {
+            background: teal;
+            color: #fff;
+            opacity: 1;
+        }
+
+
+    }
+}
